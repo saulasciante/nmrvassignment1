@@ -2,7 +2,7 @@ import numpy as np
 
 from ex1_utils import gaussderiv, convolve, gausssmooth
 
-derivSigma = 0.3
+derivSigma = 0.4
 smoothingSigma = 1
 
 # ignore division with zero
