@@ -5,8 +5,9 @@ import cv2
 from matplotlib.colors import hsv_to_rgb
 
 
-def convolve(img, kernelSize):
-    return cv2.filter2D(img, -1, np.ones((kernelSize, kernelSize)))
+def convolve(img, kernel):
+    return cv2.filter2D(img, -1, kernel)
+
 
 
 def gaussderiv(img, sigma):
