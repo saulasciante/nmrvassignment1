@@ -1,5 +1,7 @@
 venv/*
+env/*
 .idea/*
 lab2/*
 disparity/*
 collision/*
+__pycache__/*
