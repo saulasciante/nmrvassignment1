@@ -17,3 +17,5 @@ ax1_12.imshow(img2)
 show_flow(U_lk, V_lk, ax1_21, type="angle")
 show_flow(U_lk, V_lk, ax1_22, type="field", set_aspect=True)
 fig1.suptitle("Lucas-Kanade Optical Flow")
+
+plt.show()

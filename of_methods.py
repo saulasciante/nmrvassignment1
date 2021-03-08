@@ -1,16 +1,21 @@
-import cv2
 import numpy as np
 
-from ex1_utils import gaussderiv, convolve
+from ex1_utils import gaussderiv, convolve, gausssmooth
 
-sigma = 0.4
+derivSigma = 0.3
+smoothingSigma = 1
 
 # ignore division with zero
 np.seterr(divide='ignore', invalid='ignore')
 
 
 def lucas_kanade(img1, img2, N):
-    Ix, Iy = gaussderiv(img1, sigma)
+    img1 = gausssmooth(img1, smoothingSigma)
+    img2 = gausssmooth(img2, smoothingSigma)
+
+    Ix1, Iy1 = gaussderiv(img1, derivSigma)
+    Ix2, Iy2 = gaussderiv(img2, derivSigma)
+    Ix, Iy = np.mean([Ix1, Ix2], axis=0), np.mean([Iy1, Iy2], axis=0)
     It = img2 - img1
 
     sum_Iy_squared = convolve(np.square(Iy), N)
