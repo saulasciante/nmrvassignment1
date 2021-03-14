@@ -1,7 +1,7 @@
 venv/*
 env/*
 .idea/*
-lab2/*
-disparity/*
-collision/*
+data/lab2/*
+data/disparity/*
+data/collision/*
 __pycache__/*

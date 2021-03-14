@@ -67,6 +67,10 @@ def horn_schunck(img1, img2, n_iters, lmbd):
     kernel = np.array([[0, 0.25, 0], [0.25, 0, 0.25], [0, 0.25, 0]])
 
     for i in range(n_iters):
+
+        if i % 100 == 0:
+            print(i)
+
         u_avg = convolve(u, kernel)
         v_avg = convolve(v, kernel)
 
