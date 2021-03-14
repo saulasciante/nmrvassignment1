@@ -2,7 +2,7 @@ import numpy as np
 
 from ex1_utils import gaussderiv, convolve, gausssmooth
 
-derivSigma = 0.4
+derivSigma = 1
 
 # ignore if division with zero
 np.seterr(divide='ignore', invalid='ignore')
@@ -15,7 +15,7 @@ def discetize_derivatives(img1, img2, smoothingSigma):
     Ix1, Iy1 = gaussderiv(img1, derivSigma)
     Ix2, Iy2 = gaussderiv(img2, derivSigma)
     Ix, Iy = np.mean([Ix1, Ix2], axis=0), np.mean([Iy1, Iy2], axis=0)
-    It = img2 - img1
+    It = gausssmooth(img2 - img1, 1)
 
     return Ix, Iy, It
 

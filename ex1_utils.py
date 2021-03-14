@@ -9,7 +9,6 @@ def convolve(img, kernel):
     return cv2.filter2D(img, -1, kernel)
 
 
-
 def gaussderiv(img, sigma):
     x = np.array(list(range(math.floor(-3.0 * sigma + 0.5), math.floor(3.0 * sigma + 0.5) + 1)))
     G = np.exp(-x**2 / (2 * sigma**2))
