@@ -1,27 +1,23 @@
 import numpy as np
 
 from ex1_utils import gaussderiv, convolve, gausssmooth
-
-derivSigma = 1
+from sklearn.metrics.pairwise import cosine_similarity
 
 # ignore if division with zero
 np.seterr(divide='ignore', invalid='ignore')
 
 
-def discetize_derivatives(img1, img2, smoothingSigma):
-    img1 = gausssmooth(img1, smoothingSigma)
-    img2 = gausssmooth(img2, smoothingSigma)
-
+def discetize_derivatives(img1, img2, smoothingSigma, derivSigma):
     Ix1, Iy1 = gaussderiv(img1, derivSigma)
     Ix2, Iy2 = gaussderiv(img2, derivSigma)
     Ix, Iy = np.mean([Ix1, Ix2], axis=0), np.mean([Iy1, Iy2], axis=0)
-    It = gausssmooth(img2 - img1, 1)
+    It = gausssmooth(img2 - img1, smoothingSigma)
 
     return Ix, Iy, It
 
 
 def lucas_kanade(img1, img2, N):
-    Ix, Iy, It = discetize_derivatives(img1, img2, 1)
+    Ix, Iy, It = discetize_derivatives(img1, img2, 1, 0.4)
 
     kernel = np.ones((N, N))
 
@@ -33,15 +29,19 @@ def lucas_kanade(img1, img2, N):
     sum_Ix_It = convolve(np.multiply(Ix, It), kernel)
     sum_Iy_It = convolve(np.multiply(Iy, It), kernel)
 
+    D = np.subtract(
+        np.multiply(sum_Ix_squared, sum_Iy_squared),
+        np.square(sum_Ix_Iy)
+    )
+
+    D[D == 0] = 0.000000001
+
     delta_x = np.divide(
         np.add(
             np.multiply(-sum_Iy_squared, sum_Ix_It),
             np.multiply(sum_Ix_Iy, sum_Iy_It)
         ),
-        np.subtract(
-            np.multiply(sum_Ix_squared, sum_Iy_squared),
-            np.square(sum_Ix_Iy)
-        )
+        D
     )
 
     delta_y = np.divide(
@@ -49,27 +49,41 @@ def lucas_kanade(img1, img2, N):
             np.multiply(sum_Ix_Iy, sum_Ix_It),
             np.multiply(sum_Ix_squared, sum_Iy_It)
         ),
-        np.subtract(
-            np.multiply(sum_Ix_squared, sum_Iy_squared),
-            np.square(sum_Ix_Iy)
-        )
+        D
     )
 
     return delta_x, delta_y
 
 
 def horn_schunck(img1, img2, n_iters, lmbd):
-    Ix, Iy, It = discetize_derivatives(img1, img2, 1)
+    Ix, Iy, It = discetize_derivatives(img1, img2, 1, 1)
 
-    u = np.zeros((Ix.shape[0], Ix.shape[1]))
-    v = np.zeros((Iy.shape[0], Iy.shape[1]))
+    #  speed by lukas kanade
+    u, v = lucas_kanade(img1, img2, 10)
+
+    # u = np.zeros((Ix.shape[0], Ix.shape[1]))
+    # v = np.zeros((Iy.shape[0], Iy.shape[1]))
+
+    u_avg = np.ones((Ix.shape[0], Ix.shape[1]))
+    v_avg = np.ones((Iy.shape[0], Iy.shape[1]))
+
+    u_sim = 0  # similarity between u and u_avg
+    v_sim = 0  # similarity between v and v_avg
 
     kernel = np.array([[0, 0.25, 0], [0.25, 0, 0.25], [0, 0.25, 0]])
 
-    for i in range(n_iters):
+    D = np.square(Ix) + np.square(Iy) + lmbd
+
+    matrixElements = Ix.shape[0] * Ix.shape[1]
+    i = 0
+
+    while i < n_iters and u_sim < 0.6 and v_sim < 0.6:
+
+        u_sim = round(np.sum(cosine_similarity(u, u_avg)) / matrixElements, 4)
+        v_sim = round(np.sum(cosine_similarity(v, v_avg)) / matrixElements, 4)
 
         if i % 100 == 0:
-            print(i)
+            print(i, u_sim, v_sim)
 
         u_avg = convolve(u, kernel)
         v_avg = convolve(v, kernel)
@@ -80,15 +94,13 @@ def horn_schunck(img1, img2, n_iters, lmbd):
                 np.multiply(Ix, u_avg),
                 np.multiply(Iy, v_avg)
             ]),
-            sum([
-                np.square(Ix),
-                np.square(Iy),
-                lmbd
-            ])
+            D
         )
 
         u = np.subtract(u_avg, np.multiply(Ix, P))
         v = np.subtract(v_avg, np.multiply(Iy, P))
+
+        i = i + 1
 
     return u, v
 
