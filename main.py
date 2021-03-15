@@ -27,7 +27,6 @@ def compute_of(img1, img2, pltTitle, normalizeImages=True):
 
     U_hs, V_hs = horn_schunck(img1, img2, 100000, 0.5)
 
-    # fig2, ((ax2_11, ax2_12), (ax2_21, ax2_22)) = plt.subplots(2, 2)
     ax4.title.set_text('Horn-Schunck')
     # show_flow(U_hs, V_hs, ax2_21, type="angle")
     show_flow(U_hs, V_hs, ax4, type="field", set_aspect=True)
@@ -136,30 +135,30 @@ def lk_speedup_comparison(img1, img2):
 random1 = np.random.rand(200, 200).astype(np.float32)
 random2 = rotate_image(random1.copy(), -1)
 
-# waffle1 = cv2.imread('data/waffle1.jpg', cv2.IMREAD_GRAYSCALE).astype(np.float32)
-# waffle2 = cv2.imread('data/waffle2.jpg', cv2.IMREAD_GRAYSCALE).astype(np.float32)
-#
-# col1 = cv2.imread('data/00000087.jpg', cv2.IMREAD_GRAYSCALE).astype(np.float32)
-# col2 = cv2.imread('data/00000088.jpg', cv2.IMREAD_GRAYSCALE).astype(np.float32)
-#
-# lab1 = cv2.imread('data/007.jpg', cv2.IMREAD_GRAYSCALE).astype(np.float32)
-# lab2 = cv2.imread('data/008.jpg', cv2.IMREAD_GRAYSCALE).astype(np.float32)
-#
-# waffle1fast = cv2.imread('data/waffle1fast.jpg', cv2.IMREAD_GRAYSCALE).astype(np.float32)
-# waffle2fast = cv2.imread('data/waffle2fast.jpg', cv2.IMREAD_GRAYSCALE).astype(np.float32)
+waffle1 = cv2.imread('data/waffle1.jpg', cv2.IMREAD_GRAYSCALE).astype(np.float32)
+waffle2 = cv2.imread('data/waffle2.jpg', cv2.IMREAD_GRAYSCALE).astype(np.float32)
 
-# compute_of(random1, random2, 'data/random.png', False)
-# compute_of(waffle1, waffle2, 'data/waffle.png')
-# compute_of(col1, col2, 'data/collision.png')
-# compute_of(lab1, lab2, 'data/lab.png')
-# compute_of(waffle1fast, waffle2fast, 'data/waffleFast.png')
-#
-# lk_parameter_comparison(waffle1, waffle2)
-# hs_parameter_comparison(waffle1, waffle2)
+col1 = cv2.imread('data/00000087.jpg', cv2.IMREAD_GRAYSCALE).astype(np.float32)
+col2 = cv2.imread('data/00000088.jpg', cv2.IMREAD_GRAYSCALE).astype(np.float32)
 
-# time_comparison(waffle1, waffle2)
-# time_comparison(lab1, lab2)
+lab1 = cv2.imread('data/007.jpg', cv2.IMREAD_GRAYSCALE).astype(np.float32)
+lab2 = cv2.imread('data/008.jpg', cv2.IMREAD_GRAYSCALE).astype(np.float32)
 
-# lk_speedup_comparison(col1, col2)
-# lk_speedup_comparison(lab1, lab2)
-# lk_speedup_comparison(waffle1, waffle2)
+waffle1fast = cv2.imread('data/waffle1fast.jpg', cv2.IMREAD_GRAYSCALE).astype(np.float32)
+waffle2fast = cv2.imread('data/waffle2fast.jpg', cv2.IMREAD_GRAYSCALE).astype(np.float32)
+
+compute_of(random1, random2, 'data/random.png', False)
+compute_of(waffle1, waffle2, 'data/waffle.png')
+compute_of(col1, col2, 'data/collision.png')
+compute_of(lab1, lab2, 'data/lab.png')
+compute_of(waffle1fast, waffle2fast, 'data/waffleFast.png')
+
+lk_parameter_comparison(waffle1, waffle2)
+hs_parameter_comparison(waffle1, waffle2)
+
+time_comparison(waffle1, waffle2)
+time_comparison(lab1, lab2)
+
+lk_speedup_comparison(col1, col2)
+lk_speedup_comparison(lab1, lab2)
+lk_speedup_comparison(waffle1, waffle2)
