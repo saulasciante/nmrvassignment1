@@ -160,6 +160,6 @@ waffle2fast = cv2.imread('data/waffle2fast.jpg', cv2.IMREAD_GRAYSCALE).astype(np
 # time_comparison(waffle1, waffle2)
 # time_comparison(lab1, lab2)
 
-lk_speedup_comparison(col1, col2)
-lk_speedup_comparison(lab1, lab2)
-lk_speedup_comparison(waffle1, waffle2)
+# lk_speedup_comparison(col1, col2)
+# lk_speedup_comparison(lab1, lab2)
+# lk_speedup_comparison(waffle1, waffle2)
