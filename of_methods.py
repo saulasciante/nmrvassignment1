@@ -55,14 +55,15 @@ def lucas_kanade(img1, img2, N):
     return delta_x, delta_y
 
 
-def horn_schunck(img1, img2, n_iters, lmbd):
+def horn_schunck(img1, img2, n_iters, lmbd, lkInit=False):
     Ix, Iy, It = discetize_derivatives(img1, img2, 1, 1)
 
     #  speed by lukas kanade
-    u, v = lucas_kanade(img1, img2, 10)
-
-    # u = np.zeros((Ix.shape[0], Ix.shape[1]))
-    # v = np.zeros((Iy.shape[0], Iy.shape[1]))
+    if lkInit:
+        u, v = lucas_kanade(img1, img2, 10)
+    else:
+        u = np.zeros((Ix.shape[0], Ix.shape[1]))
+        v = np.zeros((Iy.shape[0], Iy.shape[1]))
 
     u_avg = np.ones((Ix.shape[0], Ix.shape[1]))
     v_avg = np.ones((Iy.shape[0], Iy.shape[1]))
@@ -101,6 +102,8 @@ def horn_schunck(img1, img2, n_iters, lmbd):
         v = np.subtract(v_avg, np.multiply(Iy, P))
 
         i = i + 1
+
+    print(i)
 
     return u, v
 

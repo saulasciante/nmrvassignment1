@@ -91,6 +91,8 @@ def hs_parameter_comparison(img1, img2):
 
 
 def time_comparison(img1, img2):
+    img1 = img1 / 255.0
+    img2 = img2 / 255.0
 
     lkKernelSizes = [3, 10, 15]
     hsIterations = [50, 150, 1000]
@@ -112,6 +114,25 @@ def time_comparison(img1, img2):
         print("Horn Schunck", hsit, execution_time)
 
 
+def lk_speedup_comparison(img1, img2):
+    img1 = img1 / 255.0
+    img2 = img2 / 255.0
+
+    startTime = datetime.datetime.now()
+    horn_schunck(img1, img2, 100000, 0.5)
+    endTime = datetime.datetime.now()
+    time_diff = (endTime - startTime)
+    execution_time = time_diff.total_seconds() * 1000
+
+    startTime2 = datetime.datetime.now()
+    horn_schunck(img1, img2, 100000, 0.5, lkInit=True)
+    endTime2 = datetime.datetime.now()
+    time_diff2 = (endTime2 - startTime2)
+    execution_time2 = time_diff2.total_seconds() * 1000
+
+    print(execution_time, execution_time2)
+
+
 random1 = np.random.rand(200, 200).astype(np.float32)
 random2 = rotate_image(random1.copy(), -1)
 
@@ -129,7 +150,7 @@ waffle2fast = cv2.imread('data/waffle2fast.jpg', cv2.IMREAD_GRAYSCALE).astype(np
 
 # compute_of(random1, random2, 'data/random.png', False)
 # compute_of(waffle1, waffle2, 'data/waffle.png')
-compute_of(col1, col2, 'data/collision.png')
+# compute_of(col1, col2, 'data/collision.png')
 # compute_of(lab1, lab2, 'data/lab.png')
 # compute_of(waffle1fast, waffle2fast, 'data/waffleFast.png')
 #
@@ -138,3 +159,7 @@ compute_of(col1, col2, 'data/collision.png')
 
 # time_comparison(waffle1, waffle2)
 # time_comparison(lab1, lab2)
+
+lk_speedup_comparison(col1, col2)
+lk_speedup_comparison(lab1, lab2)
+lk_speedup_comparison(waffle1, waffle2)
